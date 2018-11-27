@@ -8,8 +8,7 @@ entity alu is
         clk_alu   : in STD_LOGIC;
 		  input_a_alu: in std_LOGIC_VECTOR (3 downto 0);
 		  input_b_alu: in std_LOGIC_VECTOR (3 downto 0);
-        imm   : in std_logic_vector(3 downto 0);
-		  slct_alu: in std_LOGIC_VECTOR (3 downto );
+		  slct_alu: in std_LOGIC_VECTOR (3 downto 0);
         output_alu: out STD_LOGIC_VECTOR (3 downto 0)
         );
 end alu;
@@ -33,13 +32,13 @@ begin
 		if (rst_alu = '1') then
 			output_alu <= "0000";
 		else
-			case slct_alu is
+			case (slct_alu) is
 				when mova =>
-					output_alu <= input_a_alu;
-				when movr =>
 					output_alu <= input_b_alu;
+				when movr =>
+					output_alu <= input_a_alu;
 				when load =>
-					output_alu <= imm;
+					output_alu <= input_b_alu;
 				when add =>
 					output_alu <= input_a_alu + input_b_alu;
 				when sub =>
@@ -49,11 +48,11 @@ begin
 				when orr =>
 					output_alu <= input_a_alu or input_b_alu;
 				--when jmp =>
-					--output_alu <= input_b_alu;
 				when inv =>
 					output_alu <= not input_b_alu;
-				when halt =>
-					output_alu <= "1111";
+				--when halt =>
+					--output_alu <= "1111";
+				when others =>
 			end case;
 		end if;
 	end process;

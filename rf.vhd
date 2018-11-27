@@ -2,13 +2,13 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity rf is
-  port ( rst_rf    : in STD_LOGIC;
-         clk_rf    : in STD_LOGIC;
-         input_rf  : in std_logic_vector(3 downto 0);  --informaçao a ser gravada
-         sel_rf    : in std_logic_vector(1 downto 0);  --registrador escolhido
-         enb_rf    : in std_logic;  -- "0" habilita a escrita e "1" habilita a leitura
-         output_rf : out std_logic_vector(3 downto 0)   --informaçao já gravada
-       );	
+  port (rst_rf    : in STD_LOGIC;
+        clk_rf    : in STD_LOGIC;
+        input_rf  : in std_logic_vector(3 downto 0);  --informaçao a ser gravada
+        sel_rf    : in std_logic_vector(1 downto 0);  --registrador escolhido
+        enb_rf    : in std_logic;  -- "0" habilita a escrita e "1" habilita a leitura
+        output_rf : out std_logic_vector(3 downto 0)   --informaçao já gravada
+        );	
 end rf;
 
 architecture bhv of rf is

@@ -1,4 +1,7 @@
+--***********************************************
 -- cpu (top level entity)
+--***********************************************
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
@@ -14,15 +17,16 @@ entity cpu is
 			);
 end cpu;
 
--- these will change as your design grows
 architecture struc of cpu is
 
+--Display de 7 segmentos
 component bcd7seg
  port (instrucoes: in std_logic_vector (3 downto 0);
 		 hex3, hex2, hex1, hex0: out std_logic_vector (6 downto 0)
 		 );
 end component;
 
+--Bloco de controle
 component ctrl 
   port (rst_ctrl   : in STD_LOGIC;
         start_ctrl : in STD_LOGIC;
@@ -35,6 +39,7 @@ component ctrl
         );
 end component;
 
+--Datapath
 component dp
   port (rst_dp    : in STD_LOGIC;
         clk_dp  : in STD_LOGIC;
@@ -61,7 +66,7 @@ begin
   datapath: dp port map(rst_cpu, clk_cpu, immediate, alu_sct_ctrl_out, rf_sel_ctrl_out, rf_enb_ctrl_out, acc_enb_ctrl_out, cpu_out);
   bcd7seg_com: bcd7seg port map (alu_sct_ctrl_out, hex3, hex2, hex1, hex0);
   
-  process(rst_cpu, clk_cpu, cpu_out)
+  process(rst_cpu, clk_cpu)
   begin
 
 	 if (rst_cpu = '1') then
@@ -75,89 +80,45 @@ begin
 
     elsif(clk_cpu'event and clk_cpu='1') then
     output_cpu <= cpu_out;
-       case cpu_out is
+       case (cpu_out) is
+		 
          when "0000" =>
-           a <= '0'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '0'; 
-           e <= '0'; 
-			  f <= '0'; 
-			  g <= '1';
+           a <= '0'; b <= '0'; c <= '0'; d <= '0'; e <= '0'; f <= '0'; g <= '1';
+			  
          when "0001" =>
-           a <= '1'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '1'; 
-           e <= '1'; 
-			  f <= '1'; 
-			  g <= '1';
+           a <= '1'; b <= '0'; c <= '0'; d <= '1'; e <= '1'; f <= '1'; g <= '1';
+			  
          when "0010" =>
-			  a <= '0'; 
-			  b <= '0'; 
-			  c <= '1'; 
-			  d <= '0'; 
-           e <= '0'; 
-			  f <= '1'; 
-			  g <= '0';
+			  a <= '0'; b <= '0'; c <= '1'; d <= '0'; e <= '0'; f <= '1'; g <= '0';
+			  
          when "0011" =>
-           a <= '0'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '0'; 
-           e <= '1'; 
-			  f <= '1'; 
-			  g <= '0';
+           a <= '0'; b <= '0'; c <= '0'; d <= '0'; e <= '1'; f <= '1'; g <= '0';
+			  
          when "0100" =>
-           a <= '1'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '1'; 
-           e <= '1'; 
-			  f <= '0'; 
-			  g <= '0';
+           a <= '1'; b <= '0'; c <= '0'; d <= '1'; e <= '1'; f <= '0'; g <= '0';
+			  
          when "0101" =>
-           a <= '0'; 
-			  b <= '1'; 
-			  c <= '0'; 
-			  d <= '0'; 
-           e <= '1'; 
-			  f <= '0'; 
-			  g <= '0';
+           a <= '0'; b <= '1'; c <= '0'; d <= '0'; e <= '1'; f <= '0'; g <= '0';
+			  
          when "0110" =>
-           a <= '0'; 
-			  b <= '1'; 
-			  c <= '0'; 
-			  d <= '0'; 
-           e <= '0'; 
-			  f <= '0'; 
-			  g <= '0';
+           a <= '0'; b <= '1'; c <= '0'; d <= '0'; e <= '0'; f <= '0'; g <= '0';
+			  
          when "0111" =>
-           a <= '0'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '1'; 
-           e <= '1'; 
-			  f <= '1'; 
-			  g <= '1';
+           a <= '0'; b <= '0'; c <= '0'; d <= '1'; e <= '1'; f <= '1'; g <= '1';
+			  
          when "1000" =>
-           a <= '0'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '0'; 
-           e <= '0'; 
-			  f <= '0'; 
-			  g <= '0';
+           a <= '0'; b <= '0'; c <= '0'; d <= '0'; e <= '0'; f <= '0'; g <= '0';
+			  
          when "1001" =>
-           a <= '0'; 
-			  b <= '0'; 
-			  c <= '0'; 
-			  d <= '1'; 
-           e <= '1'; 
-			  f <= '0'; 
-			  g <= '0';
+           a <= '0'; b <= '0'; c <= '0'; d <= '1'; e <= '1'; f <= '0'; g <= '0';
+			  
          when others =>
+			  a <= '1'; b <= '1'; c <= '1'; d <= '1'; e <= '1'; f <= '1'; g <= '1';
+			  
        end case;
+		 
     end if;
-  end process;							
+	 
+  end process;	
+  
 end struc;

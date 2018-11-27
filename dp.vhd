@@ -1,4 +1,6 @@
+--*****************************************
 -- datapath for microprocessor
+--*****************************************
 library IEEE;
 use IEEE.std_logic_1164.all;
 
@@ -16,6 +18,7 @@ end dp;
 
 architecture rtl2 of dp is
 
+--Alu (Unidade Lógica Aritmetrica)
 component alu is
   port (rst_alu: in STD_LOGIC;
         clk_alu: in STD_LOGIC;
@@ -26,6 +29,7 @@ component alu is
         );
 end component;
 
+--Acumulador
 component acc is
   port (rst_acc: in STD_LOGIC;
         clk_acc: in STD_LOGIC;
@@ -35,6 +39,7 @@ component acc is
         );
 end component;
 
+--Banco de Registradores
 component rf is
   port (rst_rf: in STD_LOGIC;
         clk_rf: in STD_LOGIC;
@@ -56,64 +61,80 @@ constant jmp: std_logic_vector(3 downto 0) := "0111";
 constant inv: std_logic_vector(3 downto 0) := "1000";
 constant halt: std_logic_vector(3 downto 0) := "1001";
 
-signal input_a_alu: std_logic_vector(3 downto 0) := "0000";
-signal input_b_alu: std_logic_vector(3 downto 0) := "0000";
-signal alu_output: std_logic_vector(3 downto 0) := "0000";
-signal rf_input: std_logic_vector(3 downto 0) := "0000";
-signal acc_input: std_logic_vector(3 downto 0) := "0000";
-signal rf_output: std_logic_vector(3 downto 0) := "0000";
-signal acc_output: std_logic_vector(3 downto 0) := "0000";
+signal input_a_alu: std_logic_vector(3 downto 0);
+signal input_b_alu: std_logic_vector(3 downto 0);
+signal alu_output: std_logic_vector(3 downto 0);
+signal rf_input: std_logic_vector(3 downto 0);
+signal acc_input: std_logic_vector(3 downto 0);
+signal rf_output: std_logic_vector(3 downto 0);
+signal acc_output: std_logic_vector(3 downto 0);
 
 begin
+
 	acumulador: acc port map (rst_dp, clk_dp, acc_input, acc_enb_dp, acc_output);
 	alu1: alu port map (rst_dp,clk_dp, input_a_alu, input_b_alu, alu_sct_dp, alu_output);
 	rf1: rf port map (rst_dp, clk_dp, rf_input, rf_sel_dp, rf_enb_dp, rf_output);
 
-		process (rst_dp, clk_dp, input_a_alu, input_b_alu, alu_sct_dp, alu_output, rf_input, rf_sel_dp, rf_enb_dp, rf_output, acc_input, acc_enb_dp, acc_output)
+		process (rst_dp, clk_dp, input_a_alu, input_b_alu, alu_sct_dp, alu_output, rf_input, rf_output, acc_input, acc_output)
 			begin
 				if(rst_dp = '1') then
 					output_dp <= "0000";
-				elsif (clk_dp'event and clk_dp = '0') then
-					case alu_sct_dp is	
+				elsif (clk_dp'event and clk_dp = '1') then
+					case (alu_sct_dp) is	
+					
 						when mova =>
 							input_b_alu <= rf_output;
 							acc_input  <= alu_output;
 							output_dp <= alu_output;
+							
 						when movr =>
-							rf_input <= acc_output;
-							input_a_alu <= rf_input;
+							input_a_alu <= rf_output;
 							output_dp <= alu_output;
+							
 						when load =>
 							input_b_alu <= input_dp;
 							acc_input  <= alu_output;
-							output_dp <= alu_output;						
+							output_dp <= alu_output;
+							rf_input <= alu_output;
+							
 						when add =>
 							input_a_alu <= acc_output;
 							input_b_alu <= rf_output;
 							acc_input  <= alu_output;
 							output_dp <= alu_output;
+							
 						when sub =>
 							input_a_alu <= acc_output;
 							input_b_alu <= rf_output;
 							acc_input  <= alu_output;
-							output_dp <= alu_output;						
+							output_dp <= alu_output;
+							
 						when andr =>
 							input_a_alu <= acc_output;
 							input_b_alu <= rf_output;
 							acc_input  <= alu_output;
-							output_dp <= alu_output;							
+							output_dp <= alu_output;
+							
 						when orr =>
 							input_a_alu <= acc_output;
 							input_b_alu <= rf_output;
 							acc_input  <= alu_output;
-							output_dp <= alu_output;							
+							output_dp <= alu_output;
+							
 						when inv =>
 							input_a_alu   <= acc_output;
-							acc_input    <= alu_output;
 							output_dp <= alu_output;
+							
+						when halt =>
+							output_dp <= alu_output;
+							
 						when others =>
 							output_dp <= acc_output;
+							
 					end case;
+					
 				end if;
+				
 		end process;
+		
 end rtl2;

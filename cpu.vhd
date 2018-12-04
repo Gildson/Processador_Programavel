@@ -13,7 +13,8 @@ entity cpu is
          clk_cpu: in STD_LOGIC;
 	      output_cpu: out STD_LOGIC_VECTOR (3 downto 0);
        	a,b,c,d,e,f,g: out std_logic;
-			hex3, hex2, hex1, hex0: out std_logic_vector (6 downto 0)
+			hex3, hex2, hex1, hex0: out std_logic_vector (6 downto 0);
+			hex5: out std_LOGIC_VECTOR (6 downto 0)
 			);
 end cpu;
 
@@ -62,6 +63,7 @@ signal acc_enb_ctrl_out 	:  std_logic;
 
 begin
 
+	hex5 <= "1111111";
   controller: ctrl port map(rst_cpu, start_cpu, clk_cpu, alu_sct_ctrl_out, rf_sel_ctrl_out, rf_enb_ctrl_out, acc_enb_ctrl_out, immediate);
   datapath: dp port map(rst_cpu, clk_cpu, immediate, alu_sct_ctrl_out, rf_sel_ctrl_out, rf_enb_ctrl_out, acc_enb_ctrl_out, cpu_out);
   bcd7seg_com: bcd7seg port map (alu_sct_ctrl_out, hex3, hex2, hex1, hex0);
@@ -113,7 +115,6 @@ begin
            a <= '0'; b <= '0'; c <= '0'; d <= '1'; e <= '1'; f <= '0'; g <= '0';
 			  
          when others =>
-			  a <= '1'; b <= '1'; c <= '1'; d <= '1'; e <= '1'; f <= '1'; g <= '1';
 			  
        end case;
 		 

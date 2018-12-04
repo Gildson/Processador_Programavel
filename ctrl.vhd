@@ -36,7 +36,7 @@ architecture fsm of ctrl is
 	
 	-- instruçoes do processador
 	-- cada instruçao acrescentada devesse aumentar o numero do array
-	type PM_BLOCK is array (0 to 7) of std_logic_vector(7 downto 0);
+	type PM_BLOCK is array (0 to 6) of std_logic_vector(7 downto 0);
 	constant PM : PM_BLOCK := (	
 
 	-- Instruçoes do processador
@@ -46,8 +46,7 @@ architecture fsm of ctrl is
 		"00010100", --	movr :	r[01] = 3
 		"00110000", --	add  :	acc = 3 + 5
 		"00010000", --	movr :	r[00] = 8
-		"10000000", --	inv  :  acc = not(acc)
-		"01101000" --	or   :	acc = acc or r[10]
+		"10000000"  --	inv  :  acc = not(acc)
      );
 	  
 begin

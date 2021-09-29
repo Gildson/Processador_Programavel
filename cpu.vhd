@@ -18,7 +18,7 @@ entity cpu is
 			);
 end cpu;
 
-architecture struc of cpu is
+architecture struct of cpu is
 
 --Display de 7 segmentos
 component bcd7seg
@@ -122,4 +122,4 @@ begin
 	 
   end process;	
   
-end struc;
+end struct;
